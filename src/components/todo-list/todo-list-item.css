@@ -1,0 +1,14 @@
+.todo-list-item{
+    cursor: pointer;
+}
+
+.done{
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+.important{
+    font-weight: bold;
+    color: steelblue;
+}
+
