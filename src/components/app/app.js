@@ -1,42 +1,57 @@
-import React from "react";
+import React, {Component} from "react";
 import AppHeader from "../app-header";
 import TodoList from "../todo-list";
 import SearchPanel from "../search-panel";
 import DoneCounter from "../app-header/done-counter";
 import TaskFilter from "../task-filter";
+import './app.css'
 
-const App = () => {
+export default class App extends Component {
+
+    state = {
+        todoData: [
+            { label: "Drink Coffee", id: 1 },
+            { label: "Make Awesome App", id: 2 },
+            { label: "Have a lunch", id: 3 },
+        ],
+        doneData: [
+            { label: "All" }, { label: "Active" }, { label: "Done" }
+        ]
+    }
+
+    deleteItem = (id) => {
+        this.setState(({todoData}) => {
+            const idx = todoData.findIndex((el) => el.id === id)
+            todoData.splice(idx, 1);
+            const before = todoData.slice(0, idx)
+            const after = todoData.slice(idx + 1)
+            const newArray = [ ...before, after]
+            return{
+                todoData: newArray
+            }
+        })
+    }
+
     
-    const todoData = [
-        { label: "Drink Coffee", id: 1 },
-        { label: "Make Awesome App", id: 2 },
-        { label: "Have a lunch", id: 3 },
-    ];
 
-
-    const doneData = [{ label: "All" }, { label: "Active" }, { label: "Done" }];
-
-    const containerStyle = {
-        width: "500px",
-    };
-
-    return (
-        <div className="mx-auto" style={containerStyle}>
+    render() {
+        return (
+        <div className="mx-auto container">
             <div className="d-flex align-items-center justify-content-between">
                 <AppHeader />
                 <DoneCounter />
             </div>
             <div className="d-flex align-items-center justify-content-between">
                 <SearchPanel />
-                <TaskFilter items={doneData} />
+                <TaskFilter items={this.state.doneData} />
             </div>
             <TodoList 
-            todos={todoData}
-            onDeleted = {(id) => console.log('del', id)}
+            todos={this.state.todoData}
+            onDeleted = {this.deleteItem}
             />
         </div>
     );
+    }
+
 };
 
-
-export default App;
