@@ -4,6 +4,7 @@ import TodoList from "../todo-list";
 import SearchPanel from "../search-panel";
 import DoneCounter from "../app-header/done-counter";
 import TaskFilter from "../task-filter";
+import AddButton from "../add-button";
 import './app.css'
 
 export default class App extends Component {
@@ -31,6 +32,20 @@ export default class App extends Component {
         });
     };
 
+    addItem = () => {
+        console.log('lox')
+        this.setState(({ todoData }) => {
+            const newArray = todoData
+            newArray.push({label: "Ilya lox", id: todoData.length + 1})
+            console.log(newArray)
+        
+            return{
+                todoData: newArray
+            }
+
+        });
+    }
+
     render() {
         return (
             <div className="mx-auto container">
@@ -45,6 +60,9 @@ export default class App extends Component {
                 <TodoList
                     todos={this.state.todoData}
                     onDeleted={this.deleteItem}
+                />
+                <AddButton
+                    onAdded = {this.addItem}
                 />
             </div>
         );
