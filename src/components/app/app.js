@@ -25,7 +25,7 @@ export default class App extends Component {
             todoData.splice(idx, 1);
             const before = todoData.slice(0, idx)
             const after = todoData.slice(idx + 1)
-            const newArray = [ ...before, after]
+            const newArray = [ ...before, ...after]
             return{
                 todoData: newArray
             }
