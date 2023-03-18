@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+ import React, {Component} from "react";
 import "./todo-list-item.css";
 
 export default class TodoListItem extends Component {
@@ -32,7 +32,7 @@ export default class TodoListItem extends Component {
             "margin-left": "5px",
         };
 
-        const { label } = this.props;
+        const { label, onDeleted } = this.props;
 
         const { done, important } = this.state;
 
@@ -52,7 +52,7 @@ export default class TodoListItem extends Component {
                 </span>
                 <div>
                     <button
-                        onClick={this.props.onDeleted}
+                        onClick={onDeleted}
                         className="btn btn-outline-danger"
                         style={buttonStyle}
                     >
