@@ -7,51 +7,47 @@ import TaskFilter from "../task-filter";
 import './app.css'
 
 export default class App extends Component {
-
     state = {
         todoData: [
             { label: "Drink Coffee", id: 1 },
             { label: "Make Awesome App", id: 2 },
             { label: "Have a lunch", id: 3 },
+            { label: "Drop Genshin", id: 4 },
         ],
-        doneData: [
-            { label: "All" }, { label: "Active" }, { label: "Done" }
-        ]
-    }
+        doneData: [{ label: "All" }, { label: "Active" }, { label: "Done" }],
+    };
 
     deleteItem = (id) => {
-        this.setState(({todoData}) => {
-            const idx = todoData.findIndex((el) => el.id === id)
+        this.setState(({ todoData }) => {
+            const idx = todoData.findIndex((el) => el.id === id);
             todoData.splice(idx, 1);
-            const before = todoData.slice(0, idx)
-            const after = todoData.slice(idx + 1)
-            const newArray = [ ...before, ...after]
-            return{
-                todoData: newArray
-            }
-        })
-    }
-
-    
+            const newArray = [
+                ...todoData.slice(0, idx),
+                ...todoData.slice(idx),
+            ];
+            return {
+                todoData: newArray,
+            };
+        });
+    };
 
     render() {
         return (
-        <div className="mx-auto container">
-            <div className="d-flex align-items-center justify-content-between">
-                <AppHeader />
-                <DoneCounter />
+            <div className="mx-auto container">
+                <div className="d-flex align-items-center justify-content-between">
+                    <AppHeader />
+                    <DoneCounter />
+                </div>
+                <div className="d-flex align-items-center justify-content-between">
+                    <SearchPanel />
+                    <TaskFilter items={this.state.doneData} />
+                </div>
+                <TodoList
+                    todos={this.state.todoData}
+                    onDeleted={this.deleteItem}
+                />
             </div>
-            <div className="d-flex align-items-center justify-content-between">
-                <SearchPanel />
-                <TaskFilter items={this.state.doneData} />
-            </div>
-            <TodoList 
-            todos={this.state.todoData}
-            onDeleted = {this.deleteItem}
-            />
-        </div>
-    );
+        );
     }
-
 };
 
