@@ -1,22 +1,33 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import AppHeader from "../app-header";
 import TodoList from "../todo-list";
 import SearchPanel from "../search-panel";
 import DoneCounter from "../app-header/done-counter";
 import TaskFilter from "../task-filter";
-import AddButton from "../add-button";
-import './app.css'
+import AddForm from "../add-form";
+import "./app.css";
 
 export default class App extends Component {
+    maxId = 1;
+
     state = {
         todoData: [
-            { label: "Drink Coffee", id: 1 },
-            { label: "Make Awesome App", id: 2 },
-            { label: "Have a lunch", id: 3 },
-            { label: "Drop Genshin", id: 4 },
+            this.createTodoItem("Drink Coffee"),
+            this.createTodoItem("Make Awesome App"),
+            this.createTodoItem("Have a lunch"),
+            this.createTodoItem("Drop Genshin"),
         ],
         doneData: [{ label: "All" }, { label: "Active" }, { label: "Done" }],
     };
+
+    createTodoItem(label) {
+        return {
+            label,
+            important: false,
+            done: false,
+            id: this.maxId++,
+        };
+    }
 
     deleteItem = (id) => {
         this.setState(({ todoData }) => {
@@ -32,26 +43,54 @@ export default class App extends Component {
         });
     };
 
-    addItem = () => {
-        console.log('lox')
-        this.setState(({ todoData }) => {
-            const newArray = todoData
-            newArray.push({label: "Ilya lox", id: todoData.length + 1})
-            console.log(newArray)
-        
-            return{
-                todoData: newArray
-            }
-
-        });
+    toggleProperty(arr, id, propName) {
+        const idx = arr.findIndex((el) => el.id === id);
+        const oldItem = arr[idx];
+        const newItem = { ...oldItem, [propName]: !oldItem[propName] };
+        return [
+            ...arr.slice(0, idx),
+            newItem,
+            ...arr.slice(idx + 1),
+        ];
     }
 
+    onToggleImportant = (id) => {
+        this.setState(({ todoData }) => {
+            return {
+                todoData: this.toggleProperty(todoData, id, 'important'),
+            };
+        });
+    };
+
+    onToggleDone = (id) => {
+        this.setState(({ todoData }) => {
+            return {
+                todoData: this.toggleProperty(todoData, id, "done"),
+            };
+        });
+    };
+
+    addItem = (text) => {
+        this.setState(({ todoData }) => {
+            const newItem = this.createTodoItem(text);
+            const newArray = todoData;
+            newArray.push(newItem);
+            return {
+                todoData: newArray,
+            };
+        });
+    };
+
+        
     render() {
+        const doneCounter = this.state.todoData.filter((el) => el.done).length;
+        const todoCounter = this.state.todoData.filter((el) => !el.done).length;
+
         return (
             <div className="mx-auto container">
                 <div className="d-flex align-items-center justify-content-between">
                     <AppHeader />
-                    <DoneCounter />
+                    <DoneCounter done={doneCounter} todo={todoCounter} />
                 </div>
                 <div className="d-flex align-items-center justify-content-between">
                     <SearchPanel />
@@ -60,12 +99,11 @@ export default class App extends Component {
                 <TodoList
                     todos={this.state.todoData}
                     onDeleted={this.deleteItem}
+                    onToggleImportant={this.onToggleImportant}
+                    onToggleDone={this.onToggleDone}
                 />
-                <AddButton
-                    onAdded = {this.addItem}
-                />
+                <AddForm onAdded={this.addItem} />
             </div>
         );
     }
-};
-
+}

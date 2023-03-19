@@ -3,28 +3,6 @@ import "./todo-list-item.css";
 
 export default class TodoListItem extends Component {
 
-    state = {
-        done: false,
-        important: false
-    }
-
-    onLabelClick = () => {
-        this.setState(({done}) => {
-            return {
-                done: !done
-            };
-        })
-    }
-
-    onImportantClick = () => {
-        this.setState(({important}) => {
-            return {
-                important: !important
-            }
-        })
-    }
-
-
     render() {
 
         const buttonStyle = {
@@ -32,9 +10,7 @@ export default class TodoListItem extends Component {
             "margin-left": "5px",
         };
 
-        const { label, onDeleted } = this.props;
-
-        const { done, important } = this.state;
+        const { label, onDeleted, onToggleImportant, onToggleDone, done, important } = this.props;
 
         let classNames = "todo-list-item";
         if (done) {
@@ -47,7 +23,7 @@ export default class TodoListItem extends Component {
 
         return (
             <div className="d-flex align-items-center justify-content-between">
-                <span onClick={this.onLabelClick} className={classNames}>
+                <span onClick={onToggleDone} className={classNames}>
                     {label}
                 </span>
                 <div>
@@ -59,7 +35,7 @@ export default class TodoListItem extends Component {
                         <i class="fa-solid fa-trash"></i>
                     </button>
                     <button
-                        onClick={this.onImportantClick}
+                        onClick={onToggleImportant}
                         style={buttonStyle}
                         className="btn btn-outline-success"
                     >
