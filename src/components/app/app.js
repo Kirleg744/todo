@@ -18,6 +18,7 @@ export default class App extends Component {
             this.createTodoItem("Drop Genshin"),
         ],
         doneData: [{ label: "All" }, { label: "Active" }, { label: "Done" }],
+        term: ''
     };
 
     createTodoItem(label) {
@@ -81,10 +82,30 @@ export default class App extends Component {
         });
     };
 
+    search(items, term){
+
+        if (term.length === 0) {
+            return items
+        }
+
+        return items.filter((item) => {
+            return item.label.toLowerCase().indexOf(term.toLowerCase()) > -1
+        })
+    }
+
+    onSearchChange = (term) => {
+        this.setState({term})
+    }
+
+
         
     render() {
-        const doneCounter = this.state.todoData.filter((el) => el.done).length;
-        const todoCounter = this.state.todoData.filter((el) => !el.done).length;
+
+        const {todoData, term} = this.state
+        const visibleItems = this.search(todoData, term);
+        const doneCounter = todoData.filter((el) => el.done).length;
+        const todoCounter = todoData.filter((el) => !el.done).length;
+
 
         return (
             <div className="mx-auto container">
@@ -93,11 +114,13 @@ export default class App extends Component {
                     <DoneCounter done={doneCounter} todo={todoCounter} />
                 </div>
                 <div className="d-flex align-items-center justify-content-between">
-                    <SearchPanel />
+                    <SearchPanel
+                        onSearchChange = {this.onSearchChange}
+                    />
                     <TaskFilter items={this.state.doneData} />
                 </div>
                 <TodoList
-                    todos={this.state.todoData}
+                    todos={visibleItems}
                     onDeleted={this.deleteItem}
                     onToggleImportant={this.onToggleImportant}
                     onToggleDone={this.onToggleDone}
