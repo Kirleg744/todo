@@ -1,3 +1,8 @@
 .container{
     width: 500px;
 }
+
+body{
+    margin-top: 70px;
+    transform: scale(150%)
+}
