@@ -128,13 +128,13 @@ export default class App extends Component {
                         filter={filter}
                     />
                 </div>
+                <AddForm onAdded={this.addItem} />
                 <TodoList
                     todos={visibleItems}
                     onDeleted={this.deleteItem}
                     onToggleImportant={this.onToggleImportant}
                     onToggleDone={this.onToggleDone}
                 />
-                <AddForm onAdded={this.addItem} />
             </div>
         );
     }
