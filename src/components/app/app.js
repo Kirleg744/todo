@@ -17,8 +17,8 @@ export default class App extends Component {
             this.createTodoItem("Have a lunch"),
             this.createTodoItem("Drop Genshin"),
         ],
-        doneData: [{ label: "All" }, { label: "Active" }, { label: "Done" }],
-        term: ''
+        term: "",
+        filter: "all",
     };
 
     createTodoItem(label) {
@@ -48,17 +48,13 @@ export default class App extends Component {
         const idx = arr.findIndex((el) => el.id === id);
         const oldItem = arr[idx];
         const newItem = { ...oldItem, [propName]: !oldItem[propName] };
-        return [
-            ...arr.slice(0, idx),
-            newItem,
-            ...arr.slice(idx + 1),
-        ];
+        return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)];
     }
 
     onToggleImportant = (id) => {
         this.setState(({ todoData }) => {
             return {
-                todoData: this.toggleProperty(todoData, id, 'important'),
+                todoData: this.toggleProperty(todoData, id, "important"),
             };
         });
     };
@@ -82,30 +78,42 @@ export default class App extends Component {
         });
     };
 
-    search(items, term){
-
+    search(items, term) {
         if (term.length === 0) {
-            return items
+            return items;
         }
 
         return items.filter((item) => {
-            return item.label.toLowerCase().indexOf(term.toLowerCase()) > -1
-        })
+            return item.label.toLowerCase().indexOf(term.toLowerCase()) > -1;
+        });
     }
 
     onSearchChange = (term) => {
-        this.setState({term})
+        this.setState({ term });
+    };
+
+    onFilterChange = (filter) => {
+        this.setState({ filter });
+    };
+
+    filter(items, filter) {
+        switch (filter) {
+            case "all":
+                return items;
+            case "active":
+                return items.filter((item) => !item.done);
+            case "done":
+                return items.filter((item) => item.done);
+            default:
+                return items;
+        }
     }
 
-
-        
     render() {
-
-        const {todoData, term} = this.state
-        const visibleItems = this.search(todoData, term);
+        const { todoData, term, filter } = this.state;
+        const visibleItems = this.filter(this.search(todoData, term), filter);
         const doneCounter = todoData.filter((el) => el.done).length;
         const todoCounter = todoData.filter((el) => !el.done).length;
-
 
         return (
             <div className="mx-auto container">
@@ -114,10 +122,11 @@ export default class App extends Component {
                     <DoneCounter done={doneCounter} todo={todoCounter} />
                 </div>
                 <div className="d-flex align-items-center justify-content-between">
-                    <SearchPanel
-                        onSearchChange = {this.onSearchChange}
+                    <SearchPanel onSearchChange={this.onSearchChange} />
+                    <TaskFilter
+                        onFilterChange={this.onFilterChange}
+                        filter={filter}
                     />
-                    <TaskFilter items={this.state.doneData} />
                 </div>
                 <TodoList
                     todos={visibleItems}
