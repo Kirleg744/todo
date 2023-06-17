@@ -25,8 +25,8 @@ export default class AddForm extends Component{
     render(){
         return(
             <form onSubmit = {this.onSubmit} className="d-flex add-form">
-                <input value = {this.state.label} onChange={this.onLabelChange} placeholder = "Что нужно сделать?" className="form-control" type="text" />
-                <button className="btn btn-success">Добавить задачу</button>
+                <input value = {this.state.label} onChange={this.onLabelChange} placeholder = "Що треба зробити?" className="form-control" type="text" />
+                <button className="btn btn-success">Добавити задачу</button>
             </form>
         )
     }

@@ -15,7 +15,6 @@ export default class App extends Component {
             this.createTodoItem("Drink Coffee"),
             this.createTodoItem("Make Awesome App"),
             this.createTodoItem("Have a lunch"),
-            this.createTodoItem("Drop Genshin"),
         ],
         term: "",
         filter: "all",
